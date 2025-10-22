@@ -22,8 +22,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return right(user);
     } on AuthException catch (e) {
       return left(Failure(e.message));
-    }
-    on ServerException catch (e) {
+    } on ServerException catch (e) {
       return left(Failure(e.message));
     }
   }
@@ -41,10 +40,22 @@ class AuthRepositoryImpl implements AuthRepository {
         password: password,
       );
       return right(user);
-    }on AuthException catch (e) {
+    } on AuthException catch (e) {
+      return left(Failure(e.message));
+    } on ServerException catch (e) {
       return left(Failure(e.message));
     }
-     on ServerException catch (e) {
+  }
+
+  @override
+  Future<Either<Failure, UserEntity>> currentUser() async {
+    try {
+      final user = await authRemoteDataSource.getCurrentUserData();
+      if (user == null) {
+        return left(Failure('User not logged In'));
+      }
+      return right(user);
+    } on ServerException catch (e) {
       return left(Failure(e.message));
     }
   }

@@ -65,6 +65,7 @@ class _SingupPageState extends State<SingupPage> {
                       AuthGradientButton(
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
+                            print('Signup pressed');
                             context.read<AuthBloc>().add(
                               AuthSignUp(
                                 email: emailController.text.trim(),

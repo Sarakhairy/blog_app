@@ -3,6 +3,7 @@ import 'package:blog_app/features/auth/data/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthRemoteDataSource {
+  Session? get currentUserSession;
   Future<UserModel> signUpWithEmailPassword({
     required String name,
     required String email,
@@ -12,6 +13,7 @@ abstract interface class AuthRemoteDataSource {
     required String email,
     required String password,
   });
+  Future<UserModel?> getCurrentUserData();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -21,8 +23,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserModel> loginWithEmailPassword({
     required String email,
     required String password,
-  }) async{
-     try {
+  }) async {
+    try {
       final response = await supabaseClient.auth.signInWithPassword(
         password: password,
         email: email,
@@ -34,7 +36,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } catch (e) {
       throw ServerException(e.toString());
     }
-    
   }
 
   @override
@@ -52,7 +53,33 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.user == null) {
         throw const ServerException('User is null');
       }
+      print(response.user!.toJson());
       return UserModel.fromJson(response.user!.toJson());
+    } catch (e) {
+      print('$e...............');
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Session? get currentUserSession => supabaseClient.auth.currentSession;
+
+  @override
+  Future<UserModel?> getCurrentUserData() async {
+    try {
+      if (currentUserSession == null) return null;
+
+      final result = await supabaseClient
+          .from('profiles')
+          .select()
+          .eq('id', currentUserSession!.user.id)
+          .maybeSingle();
+
+      if (result == null) return null;
+
+      return UserModel.fromJson(
+        result as Map<String, dynamic>,
+      ).copyWith(email: currentUserSession!.user.email);
     } catch (e) {
       throw ServerException(e.toString());
     }
