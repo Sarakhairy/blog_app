@@ -53,10 +53,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.user == null) {
         throw const ServerException('User is null');
       }
-      print(response.user!.toJson());
       return UserModel.fromJson(response.user!.toJson());
     } catch (e) {
-      print('$e...............');
       throw ServerException(e.toString());
     }
   }
@@ -78,7 +76,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (result == null) return null;
 
       return UserModel.fromJson(
-        result as Map<String, dynamic>,
+        result,
       ).copyWith(email: currentUserSession!.user.email);
     } catch (e) {
       throw ServerException(e.toString());

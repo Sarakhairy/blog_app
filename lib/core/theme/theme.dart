@@ -7,6 +7,10 @@ class AppTheme {
     borderRadius: BorderRadius.circular(10),
   );
   static final darkThemeMode = ThemeData.dark().copyWith(
+    chipTheme: ChipThemeData(
+      color: MaterialStatePropertyAll(AppPallete.backgroundColor),
+      side: BorderSide.none,
+    ),
     scaffoldBackgroundColor: AppPallete.backgroundColor,
     inputDecorationTheme: InputDecorationTheme(
       contentPadding: EdgeInsets.all(27),
