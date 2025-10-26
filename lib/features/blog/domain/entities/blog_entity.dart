@@ -6,6 +6,7 @@ class BlogEntity {
   final String imageUrl;
   final List<String> topics;
   final DateTime updatedAt;
+  final String? posterName;
 
   BlogEntity({
     required this.id,
@@ -15,5 +16,6 @@ class BlogEntity {
     required this.imageUrl,
     required this.topics,
     required this.updatedAt,
+    this.posterName,
   });
 }
