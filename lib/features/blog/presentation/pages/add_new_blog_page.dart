@@ -100,7 +100,7 @@ class _AddNewBlogPageState extends State<AddNewBlogPage> {
                                 dashPattern: [10, 4],
                                 strokeCap: StrokeCap.round,
                               ),
-                              child: Container(
+                              child: SizedBox(
                                 height: 150,
                                 width: double.infinity,
                                 child: const Column(
